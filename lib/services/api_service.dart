@@ -10,7 +10,7 @@ import '../models/health_advice_model.dart';
 import '../models/user_model.dart';
 
 class ApiService {
-  static const String baseUrl = 'http://localhost:3000/api';
+  static const String baseUrl = 'http://10.0.2.2:3000/api';
 
   static const Map<String, String> demoAccounts = {
     'demo@fitplus.com': 'demo123456',
@@ -59,6 +59,46 @@ class ApiService {
       }
     } catch (e) {
       print('[v0] Lỗi đăng nhập: $e');
+      return {'success': false, 'message': 'Lỗi: $e'};
+    }
+  }
+
+  Future<Map<String, dynamic>> signup({
+    required String fullName,
+    required String email,
+    required String password,
+    required String phoneNumber,
+    required DateTime dateOfBirth,
+    required double height,
+    required double weight,
+  }) async {
+    try {
+      final response = await http
+          .post(
+            Uri.parse('$baseUrl/auth/signup'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode({
+              'fullName': fullName,
+              'email': email,
+              'password': password,
+              'phoneNumber': phoneNumber,
+              'dateOfBirth': dateOfBirth.toIso8601String().split('T')[0],
+              'height': height,
+              'weight': weight,
+            }),
+          )
+          .timeout(
+            const Duration(seconds: 5),
+            onTimeout: () => throw Exception('API không phản hồi'),
+          );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return jsonDecode(response.body);
+      } else {
+        return {'success': false, 'message': 'Đăng kí thất bại'};
+      }
+    } catch (e) {
+      print('[v0] Lỗi đăng kí: $e');
       return {'success': false, 'message': 'Lỗi: $e'};
     }
   }

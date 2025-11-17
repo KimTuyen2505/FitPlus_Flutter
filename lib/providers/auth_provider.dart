@@ -26,16 +26,47 @@ class AuthProvider extends ChangeNotifier {
       if (response['success']) {
         _isLoggedIn = true;
         _currentUser = UserModel.fromJson(response['user']);
-        
+
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('authToken', response['token']);
-        
+
         notifyListeners();
         return true;
       }
       return false;
     } catch (e) {
       print('[v0] Lỗi đăng nhập: $e');
+      return false;
+    }
+  }
+
+  Future<bool> signup({
+    required String fullName,
+    required String email,
+    required String password,
+    required String phoneNumber,
+    required DateTime dateOfBirth,
+    required double height,
+    required double weight,
+  }) async {
+    try {
+      final response = await _apiService.signup(
+        fullName: fullName,
+        email: email,
+        password: password,
+        phoneNumber: phoneNumber,
+        dateOfBirth: dateOfBirth,
+        height: height,
+        weight: weight,
+      );
+
+      if (response['success']) {
+        notifyListeners();
+        return true;
+      }
+      return false;
+    } catch (e) {
+      print('[v0] Lỗi đăng kí: $e');
       return false;
     }
   }
