@@ -25,6 +25,7 @@ class PregnancyTrackerModel {
       'weekOfPregnancy': weekOfPregnancy,
     };
   }
+  
 
   factory PregnancyTrackerModel.fromJson(Map<String, dynamic> json) {
     return PregnancyTrackerModel(
