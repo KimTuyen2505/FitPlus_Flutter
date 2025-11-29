@@ -91,7 +91,7 @@ class AuthProvider extends ChangeNotifier {
       }
       return false;
     } catch (e) {
-      print('[v0] Lỗi cập nhật hồ sơ: $e');
+      print('Lỗi cập nhật hồ sơ: $e');
       return false;
     }
   }
